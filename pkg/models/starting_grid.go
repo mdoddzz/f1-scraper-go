@@ -4,12 +4,13 @@ import "time"
 
 // StartingGrid : model for the race starting grid
 type StartingGrid struct {
-	RaceId   string
-	Position int
-	Number   int
-	Driver   string
-	Car      string
-	Time     time.Duration
+	ID       string        `json:"id" bson:"_id,omitempty"`
+	RaceId   string        `json:"race_id" bson:"race_id"`
+	Position int           `json:"position" bson:"position"`
+	Number   int           `json:"number" bson:"number"`
+	Driver   string        `json:"driver" bson:"driver"`
+	Car      string        `json:"car" bson:"car"`
+	Time     time.Duration `json:"time" bson:"time"`
 }
 
 // StartingGridService : interface for the starting grid model

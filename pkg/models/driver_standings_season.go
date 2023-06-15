@@ -2,6 +2,7 @@ package models
 
 // DriverStandingsSeason : model for driver standing for the whole season
 type DriverStandingsSeason struct {
+	ID          string  `json:"id" bson:"_id,omitempty"`
 	Year        int     `json:"year" bson:"year"`
 	Position    int     `json:"position" bson:"position"`
 	Driver      Driver  `json:"driver" bson:"driver"`

@@ -20,7 +20,7 @@ type RacesService interface {
 	// Get all races
 	GetRaces() (*[]Race, error)
 
-	// Get a race by date
+	// Get a race by URL ID
 	GetRaceByUrlId(id int) (*Race, error)
 
 	// Get a race by ID

@@ -4,6 +4,7 @@ import "time"
 
 // Practice : model for the practice results
 type Practice struct {
+	ID            string    `json:"id" bson:"_id,omitempty"`
 	RaceId        string    `json:"race_id" bson:"race_id"`
 	SessionNumber int       `json:"session_number" bson:"session_number"`
 	Position      int       `json:"position" bson:"position"`

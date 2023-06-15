@@ -2,6 +2,7 @@ package models
 
 // RaceResult : model for the race results
 type RaceResult struct {
+	ID       string  `json:"id" bson:"_id,omitempty"`
 	RaceId   string  `json:"race_id" bson:"race_id"`
 	Position int     `json:"position" bson:"position"`
 	Number   int     `json:"number" bson:"number"`

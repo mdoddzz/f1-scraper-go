@@ -2,6 +2,7 @@ package models
 
 // DriverStandings : model for the driver standings per driver/ race
 type DriverStandings struct {
+	ID           string  `json:"id" bson:"_id,omitempty"`
 	RaceId       string  `json:"race_id" bson:"race_id"`
 	Driver       Driver  `json:"driver" bson:"driver"`
 	Car          string  `json:"car" bson:"car"`
