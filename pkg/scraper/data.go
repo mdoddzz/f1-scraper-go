@@ -67,17 +67,27 @@ func (s *service) HandleData() {
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.DriverStandingsSeason{
-					Year:        handleF1Int(el.ChildText("td:nth-child(2)")),
-					Position:    handleF1Int(el.ChildText("td:nth-child(3)")),
-					Driver:      handleF1Driver(el, "td:nth-child(4)"),
-					Nationality: el.ChildText("td:nth-child(5)"),
-					Car:         el.ChildText("td:nth-child(6)"),
-					Points:      handleF1Float(el.ChildText("td:nth-child(7)")),
+					Year:        handleF1Int(getUrlPathByIndex(path, 3)),
+					Position:    handleF1Int(el.ChildText("td:nth-child(2)")),
+					Driver:      handleF1Driver(el, "td:nth-child(3)"),
+					Nationality: el.ChildText("td:nth-child(4)"),
+					Car:         el.ChildText("td:nth-child(5)"),
+					Points:      handleF1Float(el.ChildText("td:nth-child(6)")),
 				}
 				s.driver_standings_season.AddDriverStandingSeason(tableData)
 			})
 
 		case "team.html":
+
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				tableData := models.ConstructorStandingsSeason{
+					Year:     handleF1Int(getUrlPathByIndex(path, 3)),
+					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+					Team:     el.ChildText("td:nth-child(3)"),
+					Points:   handleF1Float(el.ChildText("td:nth-child(7)")),
+				}
+				s.constructor_standings_season.AddConstructorStandingsSeason(tableData)
+			})
 
 		case "fastest-laps.html":
 

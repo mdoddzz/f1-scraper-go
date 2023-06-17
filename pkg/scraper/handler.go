@@ -9,14 +9,16 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/mdoddzz/f1-scraper-go/pkg/models"
 	"github.com/mdoddzz/f1-scraper-go/pkg/storage/mongo"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type service struct {
-	col                     *colly.Collector
-	race                    models.RacesService
-	race_results            models.RaceResultService
-	driver_standings_season models.DriverStandingSeasonService
-	baseURL                 string
+	col                          *colly.Collector
+	race                         models.RacesService
+	race_results                 models.RaceResultService
+	driver_standings_season      models.DriverStandingSeasonService
+	constructor_standings_season models.ConstructorStandingsSeasonService
+	baseURL                      string
 }
 
 func newCollector() *colly.Collector {
@@ -45,7 +47,7 @@ func newCollector() *colly.Collector {
 }
 
 func NewWithMongo(storage *mongo.Storage) *service {
-	return &service{newCollector(), storage, storage, storage, "https://www.formula1.com"}
+	return &service{newCollector(), storage, storage, storage, storage, "https://www.formula1.com"}
 }
 
 /*func NewWithMySQL(storage *sql.DB) *service {
@@ -74,6 +76,14 @@ func (s *service) ErrorHandler() {
 func getUrlEnd(url string) string {
 
 	return url[strings.LastIndex(url, "/")+1:]
+
+}
+
+func getUrlPathByIndex(url string, index int) string {
+
+	split_url := strings.Split(url, "/")
+
+	return split_url[index]
 
 }
 
@@ -134,11 +144,11 @@ func handleF1Float(str string) float64 {
 	return f
 }
 
-func (s *service) getRaceId(url string) (string, error) {
+func (s *service) getRaceId(url string) (primitive.ObjectID, error) {
 
 	race_id, err := s.race.GetRaceByUrlId(getIdFromURL(url))
 	if err != nil {
-		return "", err
+		return primitive.ObjectID{}, err
 	}
 
 	return race_id.ID, nil

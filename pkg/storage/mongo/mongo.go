@@ -14,10 +14,11 @@ import (
 
 // Storage represents a storage object
 type Storage struct {
-	db                      *mongo.Database
-	race                    *mongo.Collection
-	race_results            *mongo.Collection
-	driver_standings_season *mongo.Collection
+	db                           *mongo.Database
+	race                         *mongo.Collection
+	race_results                 *mongo.Collection
+	driver_standings_season      *mongo.Collection
+	constructor_standings_season *mongo.Collection
 }
 
 // MongoDB order
@@ -58,7 +59,8 @@ func NewStorage(db *mongo.Database) *Storage {
 		race:         db.Collection("race"),
 		race_results: db.Collection("race_results"),
 
-		driver_standings_season: db.Collection("driver_standings_season"),
+		driver_standings_season:      db.Collection("driver_standings_season"),
+		constructor_standings_season: db.Collection("constructor_standings_season"),
 	}
 
 	return &s
