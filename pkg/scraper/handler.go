@@ -9,7 +9,6 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/mdoddzz/f1-scraper-go/pkg/models"
 	"github.com/mdoddzz/f1-scraper-go/pkg/storage/mongo"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type service struct {
@@ -144,11 +143,11 @@ func handleF1Float(str string) float64 {
 	return f
 }
 
-func (s *service) getRaceId(url string) (primitive.ObjectID, error) {
+func (s *service) getRaceId(url string) (string, error) {
 
 	race_id, err := s.race.GetRaceByUrlId(getIdFromURL(url))
 	if err != nil {
-		return primitive.ObjectID{}, err
+		return "", err
 	}
 
 	return race_id.ID, nil
