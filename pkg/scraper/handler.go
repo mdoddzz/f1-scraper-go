@@ -143,7 +143,7 @@ func handleF1Float(str string) float64 {
 	return f
 }
 
-func (s *service) getRaceId(url string) (string, error) {
+func (s *service) getRaceId(url string) (interface{}, error) {
 
 	race_id, err := s.race.GetRaceByUrlId(getIdFromURL(url))
 	if err != nil {

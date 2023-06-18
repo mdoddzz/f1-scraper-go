@@ -5,8 +5,6 @@ import (
 	"log"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -66,6 +64,7 @@ func NewStorage(db *mongo.Database) *Storage {
 	return &s
 }
 
+/*
 func findOptions(offset int, limit int, order []Order) *options.FindOptions {
 	findOptions := options.Find()
 	findOptions.SetLimit(int64(limit)).
@@ -84,3 +83,4 @@ func findOptions(offset int, limit int, order []Order) *options.FindOptions {
 
 	return findOptions
 }
+*/

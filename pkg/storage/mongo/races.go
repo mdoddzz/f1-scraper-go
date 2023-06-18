@@ -36,7 +36,9 @@ func (s *Storage) GetRaceByUrlId(id int) (*models.Race, error) {
 }
 
 // Get a race by ID
-func (s *Storage) GetRaceById(id string) (*models.Race, error) {
+func (s *Storage) GetRaceById(id interface{}) (*models.Race, error) {
+
+	// Check ID a primitive.ObjectId
 
 	return &models.Race{}, nil
 }

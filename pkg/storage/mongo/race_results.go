@@ -7,7 +7,9 @@ import (
 )
 
 // Get race result
-func (s *Storage) GetRaceResult(raceId string) (*[]models.RaceResult, error) {
+func (s *Storage) GetRaceResult(raceId interface{}) (*[]models.RaceResult, error) {
+
+	// Check ID a primitive.ObjectId
 
 	return &[]models.RaceResult{}, nil
 }

@@ -2,11 +2,11 @@ package models
 
 // ConstructorStandingsSeason : model for constructor standing for the whole season
 type ConstructorStandingsSeason struct {
-	ID       string  `json:"id" bson:"_id,omitempty"`
-	Year     int     `json:"year" bson:"year"`
-	Position int     `json:"position" bson:"position"`
-	Team     string  `json:"team" bson:"team"`
-	Points   float64 `json:"points" bson:"points"`
+	ID       interface{} `json:"id" bson:"_id,omitempty"`
+	Year     int         `json:"year" bson:"year"`
+	Position int         `json:"position" bson:"position"`
+	Team     string      `json:"team" bson:"team"`
+	Points   float64     `json:"points" bson:"points"`
 }
 
 // ConstructorStandingsSeasonService : interface for the constructor standing for the whole season model
