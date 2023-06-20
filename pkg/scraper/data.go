@@ -88,6 +88,30 @@ func (s *service) HandleData() {
 
 		case "fastest-laps.html":
 
+		case "pit-stop-summary.html":
+
+			// Get race ID from URL
+			race_id, err := s.getRaceId(path)
+			if err != nil {
+				fmt.Println("Unable to get raceID")
+				break
+			}
+
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				tableData := models.PitStop{
+					RaceId:    race_id,
+					Stops:     handleF1Int(el.ChildText("td:nth-child(2)")),
+					Number:    handleF1Int(el.ChildText("td:nth-child(3)")),
+					Driver:    handleF1Driver(el, "td:nth-child(4)"),
+					Car:       el.ChildText("td:nth-child(5)"),
+					Lap:       handleF1Int(el.ChildText("td:nth-child(6)")),
+					TimeOfDay: handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
+					Time:      handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
+					Total:     handleF1Time(el.ChildText("td:nth-child(9)"), "time"),
+				}
+				s.pit_stops.AddPitStop(tableData)
+			})
+
 		default:
 
 			if strings.Contains(path, "/drivers/") {

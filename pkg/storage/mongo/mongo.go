@@ -17,6 +17,7 @@ type Storage struct {
 	race_results                 *mongo.Collection
 	driver_standings_season      *mongo.Collection
 	constructor_standings_season *mongo.Collection
+	pit_stops                    *mongo.Collection
 }
 
 // MongoDB order
@@ -59,6 +60,8 @@ func NewStorage(db *mongo.Database) *Storage {
 
 		driver_standings_season:      db.Collection("driver_standings_season"),
 		constructor_standings_season: db.Collection("constructor_standings_season"),
+
+		pit_stops: db.Collection("pit_stops"),
 	}
 
 	return &s

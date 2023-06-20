@@ -17,6 +17,7 @@ type service struct {
 	race_results                 models.RaceResultService
 	driver_standings_season      models.DriverStandingSeasonService
 	constructor_standings_season models.ConstructorStandingsSeasonService
+	pit_stops                    models.PitStopService
 	baseURL                      string
 }
 
@@ -46,7 +47,7 @@ func newCollector() *colly.Collector {
 }
 
 func NewWithMongo(storage *mongo.Storage) *service {
-	return &service{newCollector(), storage, storage, storage, storage, "https://www.formula1.com"}
+	return &service{newCollector(), storage, storage, storage, storage, storage, "https://www.formula1.com"}
 }
 
 /*func NewWithMySQL(storage *sql.DB) *service {
@@ -159,7 +160,7 @@ func handleF1Driver(el *colly.HTMLElement, querySelectorBase string) models.Driv
 func handleF1Int(str string) int {
 	i, err := strconv.Atoi(str)
 	if err != nil {
-		fmt.Println("Error Parsing Int Data")
+		fmt.Println("Error Parsing Int Data: ", str)
 		i = 0 // Set empty ints
 	}
 	return i
@@ -168,7 +169,7 @@ func handleF1Int(str string) int {
 func handleF1Float(str string) float64 {
 	f, err := strconv.ParseFloat(strings.TrimSpace(str), 64)
 	if err != nil {
-		fmt.Println("Error Parsing Int Data")
+		fmt.Println("Error Parsing Float Data: ", str)
 		f = 0 // Set empty ints
 	}
 	return f
