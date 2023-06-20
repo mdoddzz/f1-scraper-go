@@ -63,6 +63,7 @@ func (s *service) HandleData() {
 		case "drivers.html":
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+
 				tableData := models.DriverStandingsSeason{
 					Year:        handleF1Int(getUrlPathByIndex(path, 3)),
 					Position:    handleF1Int(el.ChildText("td:nth-child(2)")),
@@ -88,6 +89,17 @@ func (s *service) HandleData() {
 
 		case "fastest-laps.html":
 
+			// check if it is for season or round
+			if len(strings.Split(path, "/")) == 5 {
+
+				// Fastest laps Season
+
+			} else {
+
+				// Fastest Laps Round
+
+			}
+
 		case "pit-stop-summary.html":
 
 			// Get race ID from URL
@@ -111,6 +123,44 @@ func (s *service) HandleData() {
 				}
 				s.pit_stops.AddPitStop(tableData)
 			})
+
+		case "starting-grid.html":
+
+			// Get race ID from URL
+			race_id, err := s.getRaceId(path)
+			if err != nil {
+				fmt.Println("Unable to get raceID")
+				break
+			}
+
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				tableData := models.StartingGrid{
+					RaceId:   race_id,
+					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+					Driver:   handleF1Driver(el, "td:nth-child(4)"),
+					Car:      el.ChildText("td:nth-child(5)"),
+					Time:     handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+				}
+				s.starting_grid.AddStartingGrid(tableData)
+			})
+
+		case "qualifying.html":
+
+			// Get race ID from URL
+			race_id, err := s.getRaceId(path)
+			if err != nil {
+				fmt.Println("Unable to get raceID")
+				break
+			}
+
+		case "qualifying-0.html":
+
+		case "sprint-grid.html":
+
+		case "sprint-shootout.html":
+
+		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html":
 
 		default:
 

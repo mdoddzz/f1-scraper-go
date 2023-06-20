@@ -6,7 +6,7 @@ type StartingGrid struct {
 	RaceId   interface{} `json:"race_id" bson:"race_id"`
 	Position int         `json:"position" bson:"position"`
 	Number   int         `json:"number" bson:"number"`
-	Driver   string      `json:"driver" bson:"driver"`
+	Driver   Driver      `json:"driver" bson:"driver"`
 	Car      string      `json:"car" bson:"car"`
 	Time     F1Time      `json:"time" bson:"time"`
 }
