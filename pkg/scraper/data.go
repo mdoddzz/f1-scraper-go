@@ -28,17 +28,11 @@ func (s *service) HandleData() {
 				tableData := models.Race{
 					UrlID:     getIdFromURL(el.ChildAttr("td:nth-child(2) a", "href")),
 					GrandPrix: el.ChildText("td:nth-child(2)"),
-					Date: models.F1Time{
-						String:   el.ChildText("td:nth-child(3)"),
-						DateTime: handleF1Date(el.ChildText("td:nth-child(3)")),
-					},
-					Winner: handleF1Driver(el, "td:nth-child(4)"),
-					Car:    el.ChildText("td:nth-child(5)"),
-					Laps:   handleF1Int(el.ChildText("td:nth-child(6)")),
-					Time: models.F1Time{
-						String:   el.ChildText("td:nth-child(7)"),
-						DateTime: handleF1Time(el.ChildText("td:nth-child(7)")),
-					},
+					Date:      handleF1Time(el.ChildText("td:nth-child(3)"), "date"),
+					Winner:    handleF1Driver(el, "td:nth-child(4)"),
+					Car:       el.ChildText("td:nth-child(5)"),
+					Laps:      handleF1Int(el.ChildText("td:nth-child(6)")),
+					Time:      handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
 				}
 				s.race.AddRace(tableData)
 			})

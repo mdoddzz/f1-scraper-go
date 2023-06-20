@@ -86,11 +86,33 @@ func getUrlPathByIndex(url string, index int) string {
 
 }
 
-func handleF1Date(str string) time.Time {
+func handleF1Time(str string, date_or_time string) models.F1Time {
+
+	t := models.F1Time{
+		String: str,
+	}
+
+	switch date_or_time {
+
+	case "date":
+
+		t.DateTime = handleF1DateFormat(str)
+
+	case "time":
+
+		t.DateTime = handleF1TimeFormat(str)
+
+	}
+
+	return t
+
+}
+
+func handleF1DateFormat(str string) time.Time {
 
 	pd, err := time.Parse("02 Jan 2006", str)
 	if err != nil {
-		fmt.Println("Error Parsing date")
+		fmt.Println("Error Parsing date: ", str)
 		pd = time.Time{} // Set empty date
 	}
 
@@ -98,11 +120,20 @@ func handleF1Date(str string) time.Time {
 
 }
 
-func handleF1Time(str string) time.Time {
+func handleF1TimeFormat(str string) time.Time {
 
-	pt, err := time.Parse("15:04:05.999999999", str)
+	// Check string length for format e.g. xx.xxx
+	format := ""
+
+	if len(str) == 6 {
+		format = "05.999999999"
+	} else {
+		format = "15:04:05.999999999"
+	}
+
+	pt, err := time.Parse(format, str)
 	if err != nil {
-		fmt.Println("Error Parsing date")
+		fmt.Println("Error Parsing date: ", str)
 		pt = time.Time{} // Set empty time
 	}
 
