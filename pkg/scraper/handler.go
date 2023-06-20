@@ -112,9 +112,9 @@ func handleF1Time(str string) time.Time {
 
 func handleF1Driver(el *colly.HTMLElement, querySelectorBase string) models.Driver {
 
-	first_name := el.ChildText(querySelectorBase + ">.hide-for-tablet")
-	last_name := el.ChildText(querySelectorBase + ">.hide-for-mobile")
-	identifier := el.ChildText(querySelectorBase + ">.hide-for-desktop")
+	first_name := el.ChildText(querySelectorBase + " .hide-for-tablet")
+	last_name := el.ChildText(querySelectorBase + " .hide-for-mobile")
+	identifier := el.ChildText(querySelectorBase + " .hide-for-desktop")
 
 	return models.Driver{
 		FullName:       first_name + " " + last_name,
