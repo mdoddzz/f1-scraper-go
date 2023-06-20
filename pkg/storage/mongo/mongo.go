@@ -17,6 +17,7 @@ type Storage struct {
 	race_results                 *mongo.Collection
 	driver_standings_season      *mongo.Collection
 	constructor_standings_season *mongo.Collection
+	qualifying                   *mongo.Collection
 	pit_stops                    *mongo.Collection
 	starting_grid                *mongo.Collection
 }
@@ -59,6 +60,7 @@ func NewStorage(db *mongo.Database) *Storage {
 		race_results:                 db.Collection("race_results"),
 		driver_standings_season:      db.Collection("driver_standings_season"),
 		constructor_standings_season: db.Collection("constructor_standings_season"),
+		qualifying:                   db.Collection("qualifying"),
 		pit_stops:                    db.Collection("pit_stops"),
 		starting_grid:                db.Collection("starting_grid"),
 	}

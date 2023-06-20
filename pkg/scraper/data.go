@@ -19,8 +19,11 @@ func (s *service) HandleData() {
 		// Get URL path
 		path := e.Request.URL.Path
 
+		// Get URL end
+		path_end := getUrlEnd(path)
+
 		// Get table type based on URL
-		switch getUrlEnd(path) {
+		switch path_end {
 
 		case "races.html":
 
@@ -28,11 +31,11 @@ func (s *service) HandleData() {
 				tableData := models.Race{
 					UrlID:     getIdFromURL(el.ChildAttr("td:nth-child(2) a", "href")),
 					GrandPrix: el.ChildText("td:nth-child(2)"),
-					Date:      handleF1Time(el.ChildText("td:nth-child(3)"), "date"),
+					Date:      *handleF1Time(el.ChildText("td:nth-child(3)"), "date"),
 					Winner:    handleF1Driver(el, "td:nth-child(4)"),
 					Car:       el.ChildText("td:nth-child(5)"),
 					Laps:      handleF1Int(el.ChildText("td:nth-child(6)")),
-					Time:      handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
+					Time:      *handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
 				}
 				s.race.AddRace(tableData)
 			})
@@ -117,9 +120,9 @@ func (s *service) HandleData() {
 					Driver:    handleF1Driver(el, "td:nth-child(4)"),
 					Car:       el.ChildText("td:nth-child(5)"),
 					Lap:       handleF1Int(el.ChildText("td:nth-child(6)")),
-					TimeOfDay: handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
-					Time:      handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
-					Total:     handleF1Time(el.ChildText("td:nth-child(9)"), "time"),
+					TimeOfDay: *handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
+					Time:      *handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
+					Total:     *handleF1Time(el.ChildText("td:nth-child(9)"), "time"),
 				}
 				s.pit_stops.AddPitStop(tableData)
 			})
@@ -140,7 +143,7 @@ func (s *service) HandleData() {
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
 					Driver:   handleF1Driver(el, "td:nth-child(4)"),
 					Car:      el.ChildText("td:nth-child(5)"),
-					Time:     handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+					Time:     *handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
 				}
 				s.starting_grid.AddStartingGrid(tableData)
 			})
@@ -154,11 +157,69 @@ func (s *service) HandleData() {
 				break
 			}
 
-		case "qualifying-0.html":
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				tableData := models.Qualifying{
+					RaceId:   race_id,
+					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+					Driver:   handleF1Driver(el, "td:nth-child(4)"),
+					Car:      el.ChildText("td:nth-child(5)"),
+					Q1:       handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+					Q2:       handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
+					Q3:       handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
+					Laps:     handleF1Int(el.ChildText("td:nth-child(9)")),
+				}
+				s.qualifying.AddQualifyingResult(tableData)
+			})
+
+		case "qualifying-0.html", "qualifying-1.html", "qualifying-2.html":
+
+			// Get race ID from URL
+			race_id, err := s.getRaceId(path)
+			if err != nil {
+				fmt.Println("Unable to get raceID")
+				break
+			}
+
+			session := ""
+			if path_end == "qualifying-0.html" {
+				session = "Overall Qualifying"
+			}
+			if path_end == "qualifying-1.html" {
+				session = "Qualifying 1"
+			}
+			if path_end == "qualifying-2.html" {
+				session = "Qualifying 2"
+			}
+
+			c := 0
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				c++
+			})
+
+			if c == 1 {
+				session = "Pole Position"
+			}
+
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				tableData := models.Qualifying{
+					RaceId:   race_id,
+					Session:  session,
+					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+					Driver:   handleF1Driver(el, "td:nth-child(4)"),
+					Car:      el.ChildText("td:nth-child(5)"),
+					Time:     handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+					Laps:     handleF1Int(el.ChildText("td:nth-child(7)")),
+				}
+				s.qualifying.AddQualifyingResult(tableData)
+			})
 
 		case "sprint-grid.html":
 
 		case "sprint-shootout.html":
+
+		case "sprint-results.html":
 
 		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html":
 
@@ -179,6 +240,9 @@ func (s *service) HandleData() {
 		}
 	})
 
-	fmt.Println("URLs Not Handled: ", uh)
+	// On finish save to logs urls
+	s.col.OnScraped(func(r *colly.Response) {
+		fmt.Println("URLs Not Handled: ", uh)
+	})
 
 }

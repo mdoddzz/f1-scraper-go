@@ -12,6 +12,6 @@ type Driver struct {
 
 // F1Time : model for saving time in both datetime format and a string
 type F1Time struct {
-	String   string    `json:"string" bson:"string"`
-	DateTime time.Time `json:"datetime" bson:"datetime"`
+	String   string    `json:"string,omitempty" bson:"string,omitempty"`
+	DateTime time.Time `json:"datetime,omitempty" bson:"datetime,omitempty"`
 }

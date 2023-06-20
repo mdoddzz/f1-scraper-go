@@ -17,6 +17,7 @@ type service struct {
 	race_results                 models.RaceResultService
 	driver_standings_season      models.DriverStandingSeasonService
 	constructor_standings_season models.ConstructorStandingsSeasonService
+	qualifying                   models.QualifyingService
 	pit_stops                    models.PitStopService
 	starting_grid                models.StartingGridService
 	baseURL                      string
@@ -48,7 +49,7 @@ func newCollector() *colly.Collector {
 }
 
 func NewWithMongo(storage *mongo.Storage) *service {
-	return &service{newCollector(), storage, storage, storage, storage, storage, storage, "https://www.formula1.com"}
+	return &service{newCollector(), storage, storage, storage, storage, storage, storage, storage, "https://www.formula1.com"}
 }
 
 /*func NewWithMySQL(storage *sql.DB) *service {
@@ -88,7 +89,7 @@ func getUrlPathByIndex(url string, index int) string {
 
 }
 
-func handleF1Time(str string, date_or_time string) models.F1Time {
+func handleF1Time(str string, date_or_time string) *models.F1Time {
 
 	t := models.F1Time{
 		String: str,
@@ -106,7 +107,7 @@ func handleF1Time(str string, date_or_time string) models.F1Time {
 
 	}
 
-	return t
+	return &t
 
 }
 
