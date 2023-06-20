@@ -10,6 +10,9 @@ import (
 
 func (s *service) HandleData() {
 
+	// Create collector for URLs not handled
+	uh := []string{}
+
 	// Set collector HTML
 	s.col.OnHTML(".resultsarchive-table > tbody", func(e *colly.HTMLElement) {
 
@@ -94,16 +97,20 @@ func (s *service) HandleData() {
 		default:
 
 			if strings.Contains(path, "/drivers/") {
-
+				fmt.Println("Driver")
+				break
 			}
 
 			if strings.Contains(path, "/team/") {
-
+				fmt.Println("Team")
+				break
 			}
 
-		}
+			uh = append(uh, path)
 
-		fmt.Println("Archive data:", e.DOM)
+		}
 	})
+
+	fmt.Println("URLs Not Handled: ", uh)
 
 }
