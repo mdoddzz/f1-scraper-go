@@ -4,7 +4,7 @@ package models
 type RaceResult struct {
 	ID       interface{} `json:"id" bson:"_id,omitempty"`
 	RaceId   interface{} `json:"race_id" bson:"race_id"`
-	Position int         `json:"position" bson:"position"`
+	Position interface{} `json:"position" bson:"position"`
 	Number   int         `json:"number" bson:"number"`
 	Driver   Driver      `json:"driver" bson:"driver"`
 	Car      string      `json:"car" bson:"car"`

@@ -177,6 +177,15 @@ func handleF1Float(str string) float64 {
 	return f
 }
 
+func handleF1IntOrString(str string) interface{} {
+	var i interface{}
+	i, err := strconv.Atoi(str)
+	if err != nil {
+		i = str
+	}
+	return i
+}
+
 func (s *service) getRaceId(url string) (interface{}, error) {
 
 	race_id, err := s.race.GetRaceByUrlId(getIdFromURL(url))

@@ -52,7 +52,7 @@ func (s *service) HandleData() {
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.RaceResult{
 					RaceId:   race_id,
-					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+					Position: handleF1IntOrString(el.ChildText("td:nth-child(2)")),
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
 					Driver:   handleF1Driver(el, "td:nth-child(4)"),
 					Car:      el.ChildText("td:nth-child(5)"),
