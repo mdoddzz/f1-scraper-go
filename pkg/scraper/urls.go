@@ -10,7 +10,7 @@ import (
 func (s *service) CollectURLs(startURL string) {
 
 	// Set url array
-	archive_urls := []string{startURL}
+	visited_urls := []string{startURL}
 
 	// Get the URLS from links at top
 	s.col.OnHTML(".resultsarchive-filter-item-link", func(e *colly.HTMLElement) {
@@ -19,10 +19,9 @@ func (s *service) CollectURLs(startURL string) {
 		url := e.Attr("href")
 
 		// Check if URL is new
-		if !slices.Contains(archive_urls, url) {
-			fmt.Println("Found New Archive URL ", e.Attr("href"))
-			s.col.Visit(s.baseURL + url)
-			archive_urls = append(archive_urls, url)
+		if !slices.Contains(visited_urls, url) {
+			e.Request.Visit(s.baseURL + url)
+			visited_urls = append(visited_urls, url)
 		}
 
 	})
@@ -34,15 +33,21 @@ func (s *service) CollectURLs(startURL string) {
 		url := e.Attr("href")
 
 		// Check if URL is new
-		if !slices.Contains(archive_urls, url) {
-			fmt.Println("Found New Archive URL ", e.Attr("href"))
-			s.col.Visit(s.baseURL + url)
-			archive_urls = append(archive_urls, url)
+		if !slices.Contains(visited_urls, url) {
+			e.Request.Visit(s.baseURL + url)
+			visited_urls = append(visited_urls, url)
 		}
 
 	})
 
 	// On finish save to logs urls
+	s.col.OnScraped(func(r *colly.Response) {
+		// Only callback on initial URL
+		if r.Request.URL.String() == s.baseURL+startURL {
+			fmt.Println("Completed full scrape")
+			//fmt.Println("Visited URLs: ", visited_urls)
+		}
+	})
 
 	// Visit first URL
 	s.col.Visit(s.baseURL + startURL)
