@@ -184,12 +184,8 @@ func (s *service) HandleData() {
 			session := ""
 			if path_end == "qualifying-0.html" {
 				session = "Overall Qualifying"
-			}
-			if path_end == "qualifying-1.html" {
-				session = "Qualifying 1"
-			}
-			if path_end == "qualifying-2.html" {
-				session = "Qualifying 2"
+			} else {
+				session = "Qualifying " + GetStringInBetween(path_end, "-", ".")
 			}
 
 			c := 0
@@ -221,7 +217,7 @@ func (s *service) HandleData() {
 
 		case "sprint-results.html":
 
-		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html":
+		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html", "practice-4.html":
 
 			// Get race ID from URL
 			race_id, err := s.getRaceId(path)
@@ -233,15 +229,8 @@ func (s *service) HandleData() {
 			session := ""
 			if path_end == "practice-0.html" {
 				session = "Warm Up"
-			}
-			if path_end == "practice-1.html" {
-				session = "Practice 1"
-			}
-			if path_end == "practice-2.html" {
-				session = "Practice 2"
-			}
-			if path_end == "practice-3.html" {
-				session = "Practice 3"
+			} else {
+				session = "Practice " + GetStringInBetween(path_end, "-", ".")
 			}
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {

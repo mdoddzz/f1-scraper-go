@@ -197,10 +197,26 @@ func (s *service) getRaceId(url string) (interface{}, error) {
 	return race_id.ID, nil
 
 }
+
 func getIdFromURL(url string) int {
 
 	split := strings.Split(url, "/")
 
 	return handleF1Int(split[5])
 
+}
+
+// GetStringInBetween Returns empty string if no start string found
+func GetStringInBetween(str string, start string, end string) (result string) {
+	s := strings.Index(str, start)
+	if s == -1 {
+		return
+	}
+	s += len(start)
+	e := strings.Index(str[s:], end)
+	if e == -1 {
+		return
+	}
+	e += s + e - 1
+	return str[s:e]
 }
