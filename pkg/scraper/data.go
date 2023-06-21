@@ -95,11 +95,43 @@ func (s *service) HandleData() {
 			// check if it is for season or round
 			if len(strings.Split(path, "/")) == 5 {
 
-				// Fastest laps Season
+				// Get Race ID from GP and Year
+				race_id := ""
+
+				// Fastest laps Season / Awards
+				e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+					tableData := models.FastestLapAward{
+						RaceId: race_id,
+						Driver: handleF1Driver(el, "td:nth-child(3)"),
+						Car:    el.ChildText("td:nth-child(4)"),
+						Time:   *handleF1Time(el.ChildText("td:nth-child(5)"), "time"),
+					}
+					s.f1_service.AddFastestLapAward(tableData)
+				})
 
 			} else {
 
+				// Get Race ID from URL
+				race_id, err := s.getRaceId(path)
+				if err != nil {
+					fmt.Println("Unable to get raceID")
+					break
+				}
+
 				// Fastest Laps Round
+				e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+					tableData := models.FastestLaps{
+						RaceId:    race_id,
+						Position:  handleF1Int(el.ChildText("td:nth-child(2)")),
+						Number:    handleF1Int(el.ChildText("td:nth-child(3)")),
+						Driver:    handleF1Driver(el, "td:nth-child(4)"),
+						Lap:       handleF1Int(el.ChildText("td:nth-child(5)")),
+						TimeOfDay: *handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+						Time:      *handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
+						AvgSpeed:  handleF1Float(el.ChildText("td:nth-child(8)")),
+					}
+					s.f1_service.AddFastestLaps(tableData)
+				})
 
 			}
 
