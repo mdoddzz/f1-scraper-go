@@ -17,6 +17,7 @@ type service struct {
 	race_results                 models.RaceResultService
 	driver_standings_season      models.DriverStandingSeasonService
 	constructor_standings_season models.ConstructorStandingsSeasonService
+	practices                    models.PracticeService
 	qualifying                   models.QualifyingService
 	pit_stops                    models.PitStopService
 	starting_grid                models.StartingGridService
@@ -49,7 +50,7 @@ func newCollector() *colly.Collector {
 }
 
 func NewWithMongo(storage *mongo.Storage) *service {
-	return &service{newCollector(), storage, storage, storage, storage, storage, storage, storage, "https://www.formula1.com"}
+	return &service{newCollector(), storage, storage, storage, storage, storage, storage, storage, storage, "https://www.formula1.com"}
 }
 
 /*func NewWithMySQL(storage *sql.DB) *service {

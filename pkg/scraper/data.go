@@ -223,6 +223,42 @@ func (s *service) HandleData() {
 
 		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html":
 
+			// Get race ID from URL
+			race_id, err := s.getRaceId(path)
+			if err != nil {
+				fmt.Println("Unable to get raceID")
+				break
+			}
+
+			session := ""
+			if path_end == "practice-0.html" {
+				session = "Warm Up"
+			}
+			if path_end == "practice-1.html" {
+				session = "Practice 1"
+			}
+			if path_end == "practice-2.html" {
+				session = "Practice 2"
+			}
+			if path_end == "practice-3.html" {
+				session = "Practice 3"
+			}
+
+			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+				tableData := models.Practice{
+					RaceId:   race_id,
+					Session:  session,
+					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+					Driver:   handleF1Driver(el, "td:nth-child(4)"),
+					Car:      el.ChildText("td:nth-child(5)"),
+					Time:     *handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+					Gap:      el.ChildText("td:nth-child(7)"),
+					Laps:     handleF1Int(el.ChildText("td:nth-child(8)")),
+				}
+				s.practices.AddPractice(tableData)
+			})
+
 		default:
 
 			if strings.Contains(path, "/drivers/") {
