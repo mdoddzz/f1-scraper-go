@@ -12,16 +12,9 @@ import (
 )
 
 type service struct {
-	col                          *colly.Collector
-	race                         models.RacesService
-	race_results                 models.RaceResultService
-	driver_standings_season      models.DriverStandingSeasonService
-	constructor_standings_season models.ConstructorStandingsSeasonService
-	practices                    models.PracticeService
-	qualifying                   models.QualifyingService
-	pit_stops                    models.PitStopService
-	starting_grid                models.StartingGridService
-	baseURL                      string
+	col        *colly.Collector
+	baseURL    string
+	f1_service models.F1Services
 }
 
 func newCollector() *colly.Collector {
@@ -50,7 +43,7 @@ func newCollector() *colly.Collector {
 }
 
 func NewWithMongo(storage *mongo.Storage) *service {
-	return &service{newCollector(), storage, storage, storage, storage, storage, storage, storage, storage, "https://www.formula1.com"}
+	return &service{newCollector(), "https://www.formula1.com", storage}
 }
 
 /*func NewWithMySQL(storage *sql.DB) *service {
@@ -189,7 +182,7 @@ func handleF1IntOrString(str string) interface{} {
 
 func (s *service) getRaceId(url string) (interface{}, error) {
 
-	race_id, err := s.race.GetRaceByUrlId(getIdFromURL(url))
+	race_id, err := s.f1_service.GetRaceByUrlId(getIdFromURL(url))
 	if err != nil {
 		return "", err
 	}

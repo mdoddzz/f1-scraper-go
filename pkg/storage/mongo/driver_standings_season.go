@@ -7,7 +7,7 @@ import (
 )
 
 // Get driver standings by Year
-func (s *Storage) GetDriverStandings(year int) (*[]models.DriverStandingsSeason, error) {
+func (s *Storage) GetDriverStandingsByYear(year int) (*[]models.DriverStandingsSeason, error) {
 
 	return &[]models.DriverStandingsSeason{}, nil
 

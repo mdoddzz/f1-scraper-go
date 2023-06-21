@@ -9,3 +9,13 @@ type DriverStandings struct {
 	RacePosition int         `json:"race_position" bson:"race_position"`
 	Points       float64     `json:"points" bson:"points"`
 }
+
+// DriverStandingsService : interface for the driver standings
+type DriverStandingsService interface {
+
+	// Get driver standings for a race
+	GetDriverStandings(raceId interface{}) (*[]DriverStandings, error)
+
+	// Add a new driver standings
+	AddDriverStandings(standing DriverStandings) error
+}

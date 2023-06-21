@@ -37,7 +37,7 @@ func (s *service) HandleData() {
 					Laps:      handleF1Int(el.ChildText("td:nth-child(6)")),
 					Time:      *handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
 				}
-				s.race.AddRace(tableData)
+				s.f1_service.AddRace(tableData)
 			})
 
 		case "race-result.html":
@@ -60,7 +60,7 @@ func (s *service) HandleData() {
 					Time:     el.ChildText("td:nth-child(7)"),
 					Points:   handleF1Float(el.ChildText("td:nth-child(8)")),
 				}
-				s.race_results.AddRaceResult(tableData)
+				s.f1_service.AddRaceResult(tableData)
 			})
 
 		case "drivers.html":
@@ -75,7 +75,7 @@ func (s *service) HandleData() {
 					Car:         el.ChildText("td:nth-child(5)"),
 					Points:      handleF1Float(el.ChildText("td:nth-child(6)")),
 				}
-				s.driver_standings_season.AddDriverStandingSeason(tableData)
+				s.f1_service.AddDriverStandingSeason(tableData)
 			})
 
 		case "team.html":
@@ -87,7 +87,7 @@ func (s *service) HandleData() {
 					Team:     el.ChildText("td:nth-child(3)"),
 					Points:   handleF1Float(el.ChildText("td:nth-child(4)")),
 				}
-				s.constructor_standings_season.AddConstructorStandingsSeason(tableData)
+				s.f1_service.AddConstructorStandingsSeason(tableData)
 			})
 
 		case "fastest-laps.html":
@@ -124,7 +124,7 @@ func (s *service) HandleData() {
 					Time:      *handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
 					Total:     *handleF1Time(el.ChildText("td:nth-child(9)"), "time"),
 				}
-				s.pit_stops.AddPitStop(tableData)
+				s.f1_service.AddPitStop(tableData)
 			})
 
 		case "starting-grid.html":
@@ -145,7 +145,7 @@ func (s *service) HandleData() {
 					Car:      el.ChildText("td:nth-child(5)"),
 					Time:     *handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
 				}
-				s.starting_grid.AddStartingGrid(tableData)
+				s.f1_service.AddStartingGrid(tableData)
 			})
 
 		case "qualifying.html":
@@ -169,7 +169,7 @@ func (s *service) HandleData() {
 					Q3:       handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
 					Laps:     handleF1Int(el.ChildText("td:nth-child(9)")),
 				}
-				s.qualifying.AddQualifyingResult(tableData)
+				s.f1_service.AddQualifyingResult(tableData)
 			})
 
 		case "qualifying-0.html", "qualifying-1.html", "qualifying-2.html":
@@ -208,7 +208,7 @@ func (s *service) HandleData() {
 					Time:     handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
 					Laps:     handleF1Int(el.ChildText("td:nth-child(7)")),
 				}
-				s.qualifying.AddQualifyingResult(tableData)
+				s.f1_service.AddQualifyingResult(tableData)
 			})
 
 		case "sprint-grid.html":
@@ -245,7 +245,7 @@ func (s *service) HandleData() {
 					Gap:      el.ChildText("td:nth-child(7)"),
 					Laps:     handleF1Int(el.ChildText("td:nth-child(8)")),
 				}
-				s.practices.AddPractice(tableData)
+				s.f1_service.AddPractice(tableData)
 			})
 
 		default:

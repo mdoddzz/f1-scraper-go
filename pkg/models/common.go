@@ -2,6 +2,22 @@ package models
 
 import "time"
 
+// Combine all services
+type F1Services interface {
+	ConstructorStandingsSeasonService
+	ConstructorStandingsService
+	DriverStandingSeasonService
+	DriverStandingsService
+	FastestLapAwardService
+	FastestLapsService
+	PitStopService
+	PracticeService
+	QualifyingService
+	RaceResultService
+	RacesService
+	StartingGridService
+}
+
 // Driver : model for driver for the whole season
 type Driver struct {
 	FullName       string `json:"full_name" bson:"full_name"`

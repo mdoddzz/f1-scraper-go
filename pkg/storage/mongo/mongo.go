@@ -13,13 +13,17 @@ import (
 // Storage represents a storage object
 type Storage struct {
 	db                           *mongo.Database
-	race                         *mongo.Collection
-	race_results                 *mongo.Collection
-	driver_standings_season      *mongo.Collection
 	constructor_standings_season *mongo.Collection
+	constructor_standings        *mongo.Collection
+	driver_standings_season      *mongo.Collection
+	driver_standings             *mongo.Collection
+	fastest_laps_awards          *mongo.Collection
+	fastest_laps                 *mongo.Collection
+	pit_stops                    *mongo.Collection
 	practices                    *mongo.Collection
 	qualifying                   *mongo.Collection
-	pit_stops                    *mongo.Collection
+	race_results                 *mongo.Collection
+	race                         *mongo.Collection
 	starting_grid                *mongo.Collection
 }
 
@@ -57,13 +61,17 @@ func NewStorage(db *mongo.Database) *Storage {
 
 	s := Storage{
 		db:                           db,
-		race:                         db.Collection("race"),
-		race_results:                 db.Collection("race_results"),
-		driver_standings_season:      db.Collection("driver_standings_season"),
 		constructor_standings_season: db.Collection("constructor_standings_season"),
+		constructor_standings:        db.Collection("constructor_standings"),
+		driver_standings_season:      db.Collection("driver_standings_season"),
+		driver_standings:             db.Collection("driver_standings"),
+		fastest_laps_awards:          db.Collection("fastest_laps_awards"),
+		fastest_laps:                 db.Collection("fastest_laps"),
+		pit_stops:                    db.Collection("pit_stops"),
 		practices:                    db.Collection("practices"),
 		qualifying:                   db.Collection("qualifying"),
-		pit_stops:                    db.Collection("pit_stops"),
+		race_results:                 db.Collection("race_results"),
+		race:                         db.Collection("race"),
 		starting_grid:                db.Collection("starting_grid"),
 	}
 

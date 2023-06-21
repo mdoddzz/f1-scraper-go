@@ -1,6 +1,6 @@
 package models
 
-// FastestLaps : model for the fastest laps results
+// FastestLaps : model for the fastest laps in a race
 type FastestLaps struct {
 	ID        interface{} `json:"id" bson:"_id,omitempty"`
 	RaceId    interface{} `json:"race_id" bson:"race_id"`
@@ -11,4 +11,14 @@ type FastestLaps struct {
 	TimeOfDay F1Time      `json:"time_of_day" bson:"time_of_day"`
 	Time      F1Time      `json:"time" bson:"time"`
 	AvgSpeed  float64     `json:"avg_speed" bson:"avg_speed"`
+}
+
+// FastestLapsService : interface for the fastest laps in a race
+type FastestLapsService interface {
+
+	// Get fastest laps for a race
+	GetFastestLaps(raceId interface{}) (*[]FastestLaps, error)
+
+	// Add a new fastest lap
+	AddFastestLaps(fastestLaps FastestLaps) error
 }
