@@ -11,9 +11,9 @@ type ConstructorStandings struct {
 // ConstructorStandingsService : interface for the constructor standings
 type ConstructorStandingsService interface {
 
-	// Get constructor standings for a race
+	// GetConstructorStandings : Get constructor standings for a race
 	GetConstructorStandings(raceId interface{}) (*[]ConstructorStandings, error)
 
-	// Add a new constructor standings
+	// AddConstructorStandings : Add a new constructor standings
 	AddConstructorStandings(standing ConstructorStandings) error
 }

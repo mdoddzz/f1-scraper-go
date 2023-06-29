@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 // Race : model for the race details
 type Race struct {
 	ID        interface{} `json:"id" bson:"_id,omitempty"`
@@ -15,15 +17,18 @@ type Race struct {
 // RacesService : interface for the race details model
 type RacesService interface {
 
-	// Get all races
+	// GetRaces : Get all races
 	GetRaces() (*[]Race, error)
 
-	// Get a race by URL ID
+	// GetRaceByUrlId : Get a race by URL ID
 	GetRaceByUrlId(id int) (*Race, error)
 
-	// Get a race by ID
+	// GetRaceByGPDate : Get a race by GP and date
+	GetRaceByGPDate(gp string, date time.Time) (*Race, error)
+
+	// GetRaceById : Get a race by ID
 	GetRaceById(id interface{}) (*Race, error)
 
-	// Add a new race
+	// AddRace : Add a new race
 	AddRace(race Race) error
 }

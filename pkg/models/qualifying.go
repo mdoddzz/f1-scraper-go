@@ -19,9 +19,9 @@ type Qualifying struct {
 // QualifyingService : interface for the qualifying result model
 type QualifyingService interface {
 
-	// Get qualifying result by race ID
+	// GetQualifyingResult : Get qualifying result by race ID
 	GetQualifyingResult(raceId interface{}) (*[]Qualifying, error)
 
-	// Add a new qualifying result
+	// AddQualifyingResult : Add a new qualifying result
 	AddQualifyingResult(qualifying Qualifying) error
 }

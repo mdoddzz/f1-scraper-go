@@ -13,9 +13,9 @@ type DriverStandings struct {
 // DriverStandingsService : interface for the driver standings
 type DriverStandingsService interface {
 
-	// Get driver standings for a race
+	// GetDriverStandings : Get driver standings for a race
 	GetDriverStandings(raceId interface{}) (*[]DriverStandings, error)
 
-	// Add a new driver standings
+	// AddDriverStandings : Add a new driver standings
 	AddDriverStandings(standing DriverStandings) error
 }

@@ -16,11 +16,11 @@ func main() {
 	storage := mongo.NewStorage(db)
 	fmt.Println("Storage Linked")
 
-	// Initialise scraper
-	scraper := scraper.NewWithMongo(storage)
+	// Initialise service
+	service := scraper.NewWithMongo(storage)
 	fmt.Println("Scraper Service Created")
 
-	// Start scraper
+	// Start service
 	fmt.Println("Scraper Starting...")
-	scraper.Start()
+	service.Start()
 }

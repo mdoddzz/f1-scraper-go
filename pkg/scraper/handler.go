@@ -11,10 +11,10 @@ import (
 	"github.com/mdoddzz/f1-scraper-go/pkg/storage/mongo"
 )
 
-type service struct {
-	col        *colly.Collector
-	baseURL    string
-	f1_service models.F1Services
+type Service struct {
+	col       *colly.Collector
+	baseURL   string
+	f1Service models.F1Services
 }
 
 func newCollector() *colly.Collector {
@@ -42,15 +42,15 @@ func newCollector() *colly.Collector {
 	return c
 }
 
-func NewWithMongo(storage *mongo.Storage) *service {
-	return &service{newCollector(), "https://www.formula1.com", storage}
+func NewWithMongo(storage *mongo.Storage) *Service {
+	return &Service{newCollector(), "https://www.formula1.com", storage}
 }
 
 /*func NewWithMySQL(storage *sql.DB) *service {
 	return &service{newCollector(), storage}
 }*/
 
-func (s *service) Start() {
+func (s *Service) Start() {
 
 	// Build all scraper functions
 	s.ErrorHandler()
@@ -61,7 +61,7 @@ func (s *service) Start() {
 
 }
 
-func (s *service) ErrorHandler() {
+func (s *Service) ErrorHandler() {
 
 	s.col.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
@@ -77,19 +77,19 @@ func getUrlEnd(url string) string {
 
 func getUrlPathByIndex(url string, index int) string {
 
-	split_url := strings.Split(url, "/")
+	splitUrl := strings.Split(url, "/")
 
-	return split_url[index]
+	return splitUrl[index]
 
 }
 
-func handleF1Time(str string, date_or_time string) *models.F1Time {
+func handleF1Time(str string, dateOrTime string) *models.F1Time {
 
 	t := models.F1Time{
 		String: str,
 	}
 
-	switch date_or_time {
+	switch dateOrTime {
 
 	case "date":
 
@@ -140,14 +140,14 @@ func handleF1TimeFormat(str string) time.Time {
 
 func handleF1Driver(el *colly.HTMLElement, querySelectorBase string) models.Driver {
 
-	first_name := el.ChildText(querySelectorBase + " .hide-for-tablet")
-	last_name := el.ChildText(querySelectorBase + " .hide-for-mobile")
+	firstName := el.ChildText(querySelectorBase + " .hide-for-tablet")
+	lastName := el.ChildText(querySelectorBase + " .hide-for-mobile")
 	identifier := el.ChildText(querySelectorBase + " .hide-for-desktop")
 
 	return models.Driver{
-		FullName:       first_name + " " + last_name,
-		FirstName:      first_name,
-		LastName:       last_name,
+		FullName:       firstName + " " + lastName,
+		FirstName:      firstName,
+		LastName:       lastName,
 		NameIdentifier: identifier,
 	}
 
@@ -157,7 +157,7 @@ func handleF1Int(str string) int {
 	i, err := strconv.Atoi(str)
 	if err != nil {
 		fmt.Println("Error Parsing Int Data: ", str)
-		i = 0 // Set empty ints
+		i = 0 // Set empty int
 	}
 	return i
 }
@@ -166,7 +166,7 @@ func handleF1Float(str string) float64 {
 	f, err := strconv.ParseFloat(strings.TrimSpace(str), 64)
 	if err != nil {
 		fmt.Println("Error Parsing Float Data: ", str)
-		f = 0 // Set empty ints
+		f = 0 // Set empty float
 	}
 	return f
 }
@@ -180,14 +180,14 @@ func handleF1IntOrString(str string) interface{} {
 	return i
 }
 
-func (s *service) getRaceId(url string) (interface{}, error) {
+func (s *Service) getRaceId(url string) (interface{}, error) {
 
-	race_id, err := s.f1_service.GetRaceByUrlId(getIdFromURL(url))
+	raceId, err := s.f1Service.GetRaceByUrlId(getIdFromURL(url))
 	if err != nil {
 		return "", err
 	}
 
-	return race_id.ID, nil
+	return raceId.ID, nil
 
 }
 

@@ -16,12 +16,12 @@ type RaceResult struct {
 // RaceResultService : interface for the race result model
 type RaceResultService interface {
 
-	// Get race result
+	// GetRaceResult : Get race result
 	GetRaceResult(raceId interface{}) (*[]RaceResult, error)
 
-	// Get race results of a driver
+	// GetRaceResultDriver : Get race results of a driver
 	GetRaceResultDriver(driver string) (*[]RaceResult, error)
 
-	// Add a new race result
+	// AddRaceResult : Add a new race result
 	AddRaceResult(raceResult RaceResult) error
 }

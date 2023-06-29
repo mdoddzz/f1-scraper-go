@@ -12,9 +12,9 @@ type ConstructorStandingsSeason struct {
 // ConstructorStandingsSeasonService : interface for the constructor standing for the whole season model
 type ConstructorStandingsSeasonService interface {
 
-	// Get constructor standings by Year
+	// GetConstructorStandingsSeason : Get constructor standings by Year
 	GetConstructorStandingsSeason(year int) (*[]ConstructorStandingsSeason, error)
 
-	// Add a new constructor standing
+	// AddConstructorStandingsSeason : Add a new constructor standing
 	AddConstructorStandingsSeason(constructorStandingsSeason ConstructorStandingsSeason) error
 }

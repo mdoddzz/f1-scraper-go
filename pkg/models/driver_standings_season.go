@@ -14,9 +14,9 @@ type DriverStandingsSeason struct {
 // DriverStandingSeasonService : interface for the driver standing for the whole season model
 type DriverStandingSeasonService interface {
 
-	// Get driver standings by Year
+	// GetDriverStandingsByYear : Get driver standings by Year
 	GetDriverStandingsByYear(year int) (*[]DriverStandingsSeason, error)
 
-	// Add a new driver standing
+	// AddDriverStandingSeason : Add a new driver standing
 	AddDriverStandingSeason(driverStandingsSeason DriverStandingsSeason) error
 }

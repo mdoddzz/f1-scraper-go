@@ -16,9 +16,9 @@ type FastestLaps struct {
 // FastestLapsService : interface for the fastest laps in a race
 type FastestLapsService interface {
 
-	// Get fastest laps for a race
+	// GetFastestLaps : Get fastest laps for a race
 	GetFastestLaps(raceId interface{}) (*[]FastestLaps, error)
 
-	// Add a new fastest lap
+	// AddFastestLaps : Add a new fastest lap
 	AddFastestLaps(fastestLaps FastestLaps) error
 }

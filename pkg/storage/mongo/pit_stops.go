@@ -6,7 +6,7 @@ import (
 	"github.com/mdoddzz/f1-scraper-go/pkg/models"
 )
 
-// Get pit stop for a race
+// GetPitStops : Get pit stop for a race
 func (s *Storage) GetPitStops(raceId interface{}) (*[]models.PitStop, error) {
 
 	// Check ID a primitive.ObjectId
@@ -15,10 +15,10 @@ func (s *Storage) GetPitStops(raceId interface{}) (*[]models.PitStop, error) {
 
 }
 
-// Add a new pit stop
+// AddPitStop : Add a new pit stop
 func (s *Storage) AddPitStop(pitStop models.PitStop) error {
 
-	_, err := s.pit_stops.InsertOne(context.TODO(), pitStop)
+	_, err := s.pitStops.InsertOne(context.TODO(), pitStop)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-// Combine all services
+// F1Services : Combine all services
 type F1Services interface {
 	ConstructorStandingsSeasonService
 	ConstructorStandingsService

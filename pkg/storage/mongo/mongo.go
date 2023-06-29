@@ -12,28 +12,28 @@ import (
 
 // Storage represents a storage object
 type Storage struct {
-	db                           *mongo.Database
-	constructor_standings_season *mongo.Collection
-	constructor_standings        *mongo.Collection
-	driver_standings_season      *mongo.Collection
-	driver_standings             *mongo.Collection
-	fastest_laps_awards          *mongo.Collection
-	fastest_laps                 *mongo.Collection
-	pit_stops                    *mongo.Collection
-	practices                    *mongo.Collection
-	qualifying                   *mongo.Collection
-	race_results                 *mongo.Collection
-	race                         *mongo.Collection
-	starting_grid                *mongo.Collection
+	db                         *mongo.Database
+	constructorStandingsSeason *mongo.Collection
+	constructorStandings       *mongo.Collection
+	driverStandingsSeason      *mongo.Collection
+	driverStandings            *mongo.Collection
+	fastestLapsAwards          *mongo.Collection
+	fastestLaps                *mongo.Collection
+	pitStops                   *mongo.Collection
+	practices                  *mongo.Collection
+	qualifying                 *mongo.Collection
+	raceResults                *mongo.Collection
+	race                       *mongo.Collection
+	startingGrid               *mongo.Collection
 }
 
-// MongoDB order
+// Order : MongoDB order
 type Order struct {
 	Name string `json:"name"`
 	Dir  string `json:"dir"`
 }
 
-// NewDB initializes the database connection
+// NewDB : initializes the database connection
 func NewDB(uri string, dbName string) *mongo.Database {
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
@@ -56,23 +56,23 @@ func NewDB(uri string, dbName string) *mongo.Database {
 	return client.Database(dbName)
 }
 
-// NewStorage returns a new instance of Storage
+// NewStorage : returns a new instance of Storage
 func NewStorage(db *mongo.Database) *Storage {
 
 	s := Storage{
-		db:                           db,
-		constructor_standings_season: db.Collection("constructor_standings_season"),
-		constructor_standings:        db.Collection("constructor_standings"),
-		driver_standings_season:      db.Collection("driver_standings_season"),
-		driver_standings:             db.Collection("driver_standings"),
-		fastest_laps_awards:          db.Collection("fastest_laps_awards"),
-		fastest_laps:                 db.Collection("fastest_laps"),
-		pit_stops:                    db.Collection("pit_stops"),
-		practices:                    db.Collection("practices"),
-		qualifying:                   db.Collection("qualifying"),
-		race_results:                 db.Collection("race_results"),
-		race:                         db.Collection("race"),
-		starting_grid:                db.Collection("starting_grid"),
+		db:                         db,
+		constructorStandingsSeason: db.Collection("constructor_standings_season"),
+		constructorStandings:       db.Collection("constructor_standings"),
+		driverStandingsSeason:      db.Collection("driver_standings_season"),
+		driverStandings:            db.Collection("driver_standings"),
+		fastestLapsAwards:          db.Collection("fastest_laps_awards"),
+		fastestLaps:                db.Collection("fastest_laps"),
+		pitStops:                   db.Collection("pit_stops"),
+		practices:                  db.Collection("practices"),
+		qualifying:                 db.Collection("qualifying"),
+		raceResults:                db.Collection("race_results"),
+		race:                       db.Collection("race"),
+		startingGrid:               db.Collection("starting_grid"),
 	}
 
 	return &s

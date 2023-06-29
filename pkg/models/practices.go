@@ -17,9 +17,9 @@ type Practice struct {
 // PracticeService : interface for the practice result model
 type PracticeService interface {
 
-	// Get practice result
+	// GetPracticeResult : Get practice result
 	GetPracticeResult(raceId interface{}, session string) (*[]Practice, error)
 
-	// Add a new practice result
+	// AddPractice : Add a new practice result
 	AddPractice(practice Practice) error
 }

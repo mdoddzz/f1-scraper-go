@@ -8,10 +8,10 @@ import (
 	"github.com/mdoddzz/f1-scraper-go/pkg/models"
 )
 
-func (s *service) HandleData() {
+func (s *Service) HandleData() {
 
 	// Create collector for URLs not handled
-	uh := []string{}
+	var uh []string
 
 	// Set collector HTML
 	s.col.OnHTML(".resultsarchive-table > tbody", func(e *colly.HTMLElement) {
@@ -20,10 +20,10 @@ func (s *service) HandleData() {
 		path := e.Request.URL.Path
 
 		// Get URL end
-		path_end := getUrlEnd(path)
+		pathEnd := getUrlEnd(path)
 
 		// Get table type based on URL
-		switch path_end {
+		switch pathEnd {
 
 		case "races.html":
 
@@ -37,13 +37,16 @@ func (s *service) HandleData() {
 					Laps:      handleF1Int(el.ChildText("td:nth-child(6)")),
 					Time:      *handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
 				}
-				s.f1_service.AddRace(tableData)
+				err := s.f1Service.AddRace(tableData)
+				if err != nil {
+					fmt.Println("Unable to save race")
+				}
 			})
 
 		case "race-result.html":
 
 			// Get race ID from URL
-			race_id, err := s.getRaceId(path)
+			raceId, err := s.getRaceId(path)
 			if err != nil {
 				fmt.Println("Unable to get raceID")
 				break
@@ -51,7 +54,7 @@ func (s *service) HandleData() {
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.RaceResult{
-					RaceId:   race_id,
+					RaceId:   raceId,
 					Position: handleF1IntOrString(el.ChildText("td:nth-child(2)")),
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
 					Driver:   handleF1Driver(el, "td:nth-child(4)"),
@@ -60,7 +63,10 @@ func (s *service) HandleData() {
 					Time:     el.ChildText("td:nth-child(7)"),
 					Points:   handleF1Float(el.ChildText("td:nth-child(8)")),
 				}
-				s.f1_service.AddRaceResult(tableData)
+				err := s.f1Service.AddRaceResult(tableData)
+				if err != nil {
+					fmt.Println("Unable to save race result")
+				}
 			})
 
 		case "drivers.html":
@@ -75,7 +81,10 @@ func (s *service) HandleData() {
 					Car:         el.ChildText("td:nth-child(5)"),
 					Points:      handleF1Float(el.ChildText("td:nth-child(6)")),
 				}
-				s.f1_service.AddDriverStandingSeason(tableData)
+				err := s.f1Service.AddDriverStandingSeason(tableData)
+				if err != nil {
+					fmt.Println("Unable to save driver standings season")
+				}
 			})
 
 		case "team.html":
@@ -87,7 +96,10 @@ func (s *service) HandleData() {
 					Team:     el.ChildText("td:nth-child(3)"),
 					Points:   handleF1Float(el.ChildText("td:nth-child(4)")),
 				}
-				s.f1_service.AddConstructorStandingsSeason(tableData)
+				err := s.f1Service.AddConstructorStandingsSeason(tableData)
+				if err != nil {
+					fmt.Println("Unable to save constructor standings season")
+				}
 			})
 
 		case "fastest-laps.html":
@@ -96,23 +108,26 @@ func (s *service) HandleData() {
 			if len(strings.Split(path, "/")) == 5 {
 
 				// Get Race ID from GP and Year
-				race_id := ""
+				raceId := ""
 
 				// Fastest laps Season / Awards
 				e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 					tableData := models.FastestLapAward{
-						RaceId: race_id,
+						RaceId: raceId,
 						Driver: handleF1Driver(el, "td:nth-child(3)"),
 						Car:    el.ChildText("td:nth-child(4)"),
 						Time:   *handleF1Time(el.ChildText("td:nth-child(5)"), "time"),
 					}
-					s.f1_service.AddFastestLapAward(tableData)
+					err := s.f1Service.AddFastestLapAward(tableData)
+					if err != nil {
+						fmt.Println("Unable to save fastest laps award")
+					}
 				})
 
 			} else {
 
 				// Get Race ID from URL
-				race_id, err := s.getRaceId(path)
+				raceId, err := s.getRaceId(path)
 				if err != nil {
 					fmt.Println("Unable to get raceID")
 					break
@@ -121,7 +136,7 @@ func (s *service) HandleData() {
 				// Fastest Laps Round
 				e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 					tableData := models.FastestLaps{
-						RaceId:    race_id,
+						RaceId:    raceId,
 						Position:  handleF1Int(el.ChildText("td:nth-child(2)")),
 						Number:    handleF1Int(el.ChildText("td:nth-child(3)")),
 						Driver:    handleF1Driver(el, "td:nth-child(4)"),
@@ -130,7 +145,10 @@ func (s *service) HandleData() {
 						Time:      *handleF1Time(el.ChildText("td:nth-child(7)"), "time"),
 						AvgSpeed:  handleF1Float(el.ChildText("td:nth-child(8)")),
 					}
-					s.f1_service.AddFastestLaps(tableData)
+					err := s.f1Service.AddFastestLaps(tableData)
+					if err != nil {
+						fmt.Println("Unable to save fastest lap")
+					}
 				})
 
 			}
@@ -138,7 +156,7 @@ func (s *service) HandleData() {
 		case "pit-stop-summary.html":
 
 			// Get race ID from URL
-			race_id, err := s.getRaceId(path)
+			raceId, err := s.getRaceId(path)
 			if err != nil {
 				fmt.Println("Unable to get raceID")
 				break
@@ -146,7 +164,7 @@ func (s *service) HandleData() {
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.PitStop{
-					RaceId:    race_id,
+					RaceId:    raceId,
 					Stops:     handleF1Int(el.ChildText("td:nth-child(2)")),
 					Number:    handleF1Int(el.ChildText("td:nth-child(3)")),
 					Driver:    handleF1Driver(el, "td:nth-child(4)"),
@@ -156,13 +174,16 @@ func (s *service) HandleData() {
 					Time:      *handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
 					Total:     *handleF1Time(el.ChildText("td:nth-child(9)"), "time"),
 				}
-				s.f1_service.AddPitStop(tableData)
+				err := s.f1Service.AddPitStop(tableData)
+				if err != nil {
+					fmt.Println("Unable to save pit stop")
+				}
 			})
 
 		case "starting-grid.html":
 
 			// Get race ID from URL
-			race_id, err := s.getRaceId(path)
+			raceId, err := s.getRaceId(path)
 			if err != nil {
 				fmt.Println("Unable to get raceID")
 				break
@@ -170,20 +191,23 @@ func (s *service) HandleData() {
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.StartingGrid{
-					RaceId:   race_id,
+					RaceId:   raceId,
 					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
 					Driver:   handleF1Driver(el, "td:nth-child(4)"),
 					Car:      el.ChildText("td:nth-child(5)"),
 					Time:     *handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
 				}
-				s.f1_service.AddStartingGrid(tableData)
+				err := s.f1Service.AddStartingGrid(tableData)
+				if err != nil {
+					fmt.Println("Unable to save starting grid")
+				}
 			})
 
 		case "qualifying.html":
 
 			// Get race ID from URL
-			race_id, err := s.getRaceId(path)
+			raceId, err := s.getRaceId(path)
 			if err != nil {
 				fmt.Println("Unable to get raceID")
 				break
@@ -191,7 +215,7 @@ func (s *service) HandleData() {
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.Qualifying{
-					RaceId:   race_id,
+					RaceId:   raceId,
 					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
 					Driver:   handleF1Driver(el, "td:nth-child(4)"),
@@ -201,23 +225,26 @@ func (s *service) HandleData() {
 					Q3:       handleF1Time(el.ChildText("td:nth-child(8)"), "time"),
 					Laps:     handleF1Int(el.ChildText("td:nth-child(9)")),
 				}
-				s.f1_service.AddQualifyingResult(tableData)
+				err := s.f1Service.AddQualifyingResult(tableData)
+				if err != nil {
+					fmt.Println("Unable to save qualifying")
+				}
 			})
 
 		case "qualifying-0.html", "qualifying-1.html", "qualifying-2.html":
 
 			// Get race ID from URL
-			race_id, err := s.getRaceId(path)
+			raceId, err := s.getRaceId(path)
 			if err != nil {
 				fmt.Println("Unable to get raceID")
 				break
 			}
 
 			session := ""
-			if path_end == "qualifying-0.html" {
+			if pathEnd == "qualifying-0.html" {
 				session = "Overall Qualifying"
 			} else {
-				session = "Qualifying " + GetStringInBetween(path_end, "-", ".")
+				session = "Qualifying " + GetStringInBetween(pathEnd, "-", ".")
 			}
 
 			c := 0
@@ -231,7 +258,7 @@ func (s *service) HandleData() {
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.Qualifying{
-					RaceId:   race_id,
+					RaceId:   raceId,
 					Session:  session,
 					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
@@ -240,7 +267,10 @@ func (s *service) HandleData() {
 					Time:     handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
 					Laps:     handleF1Int(el.ChildText("td:nth-child(7)")),
 				}
-				s.f1_service.AddQualifyingResult(tableData)
+				err := s.f1Service.AddQualifyingResult(tableData)
+				if err != nil {
+					fmt.Println("Unable to save qualifying")
+				}
 			})
 
 		case "sprint-grid.html":
@@ -252,22 +282,22 @@ func (s *service) HandleData() {
 		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html", "practice-4.html":
 
 			// Get race ID from URL
-			race_id, err := s.getRaceId(path)
+			raceId, err := s.getRaceId(path)
 			if err != nil {
 				fmt.Println("Unable to get raceID")
 				break
 			}
 
 			session := ""
-			if path_end == "practice-0.html" {
+			if pathEnd == "practice-0.html" {
 				session = "Warm Up"
 			} else {
-				session = "Practice " + GetStringInBetween(path_end, "-", ".")
+				session = "Practice " + GetStringInBetween(pathEnd, "-", ".")
 			}
 
 			e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
 				tableData := models.Practice{
-					RaceId:   race_id,
+					RaceId:   raceId,
 					Session:  session,
 					Position: handleF1Int(el.ChildText("td:nth-child(2)")),
 					Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
@@ -277,18 +307,54 @@ func (s *service) HandleData() {
 					Gap:      el.ChildText("td:nth-child(7)"),
 					Laps:     handleF1Int(el.ChildText("td:nth-child(8)")),
 				}
-				s.f1_service.AddPractice(tableData)
+				err := s.f1Service.AddPractice(tableData)
+				if err != nil {
+					fmt.Println("Unable to save practice")
+				}
 			})
 
 		default:
 
 			if strings.Contains(path, "/drivers/") {
-				fmt.Println("Driver")
+
+				e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+
+					// Get Race ID from GP and Date
+					gpDate := handleF1Time(el.ChildAttr("td:nth-child(2)", "date"), "date").DateTime
+					raceId, err := s.f1Service.GetRaceByGPDate(el.ChildText("td:nth-child(1)"), gpDate)
+					if err == nil {
+
+						tableData := models.DriverStandings{
+							RaceId:       raceId,
+							Driver:       models.Driver{},
+							Car:          el.ChildText("td:nth-child(4)"),
+							RacePosition: handleF1Int(el.ChildText("td:nth-child(5)")),
+							Points:       handleF1Float(el.ChildText("td:nth-child(6)")),
+						}
+						err := s.f1Service.AddDriverStandings(tableData)
+						if err != nil {
+							fmt.Println("Unable to save driver standing")
+						}
+
+					} else {
+						fmt.Println("Unable to get raceID from GP and Date")
+					}
+
+				})
 				break
 			}
 
 			if strings.Contains(path, "/team/") {
-				fmt.Println("Team")
+
+				// Get Race ID from GP and Year
+
+				e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+					tableData := models.ConstructorStandings{}
+					err := s.f1Service.AddConstructorStandings(tableData)
+					if err != nil {
+						fmt.Println("Unable to save contractor standings")
+					}
+				})
 				break
 			}
 

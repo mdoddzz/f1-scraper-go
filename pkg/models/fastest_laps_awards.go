@@ -12,9 +12,9 @@ type FastestLapAward struct {
 // FastestLapAwardService : interface for the fastest lap result model
 type FastestLapAwardService interface {
 
-	// Get practice result
+	// GetFastestLapAward : Get practice result
 	GetFastestLapAward(raceId interface{}) (*FastestLapAward, error)
 
-	// Add a new practice result
+	// AddFastestLapAward : Add a new practice result
 	AddFastestLapAward(fastestLapAward FastestLapAward) error
 }

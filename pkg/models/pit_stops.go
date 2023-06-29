@@ -17,9 +17,9 @@ type PitStop struct {
 // PitStopService : interface for the pit stop model
 type PitStopService interface {
 
-	// Get pit stop for a race
+	// GetPitStops : Get pit stop for a race
 	GetPitStops(raceId interface{}) (*[]PitStop, error)
 
-	// Add a new pit stop
+	// AddPitStop : Add a new pit stop
 	AddPitStop(pitStop PitStop) error
 }

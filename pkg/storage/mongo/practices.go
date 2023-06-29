@@ -6,14 +6,14 @@ import (
 	"github.com/mdoddzz/f1-scraper-go/pkg/models"
 )
 
-// Get practice result
+// GetPracticeResult : Get practice result
 func (s *Storage) GetPracticeResult(raceId interface{}, session string) (*[]models.Practice, error) {
 
 	return &[]models.Practice{}, nil
 
 }
 
-// Add a new practice result
+// AddPractice : Add a new practice result
 func (s *Storage) AddPractice(practice models.Practice) error {
 
 	_, err := s.practices.InsertOne(context.TODO(), practice)

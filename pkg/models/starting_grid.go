@@ -14,9 +14,9 @@ type StartingGrid struct {
 // StartingGridService : interface for the starting grid model
 type StartingGridService interface {
 
-	// Get starting grid of a race
+	// GetStartingGrid : Get starting grid of a race
 	GetStartingGrid(raceId interface{}) (*[]StartingGrid, error)
 
-	// Add a new starting grid
+	// AddStartingGrid : Add a new starting grid
 	AddStartingGrid(startingGrid StartingGrid) error
 }

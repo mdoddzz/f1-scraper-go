@@ -2,15 +2,14 @@ package scraper
 
 import (
 	"fmt"
-
 	"github.com/gocolly/colly"
 	"golang.org/x/exp/slices"
 )
 
-func (s *service) CollectURLs(startURL string) {
+func (s *Service) CollectURLs(startURL string) {
 
 	// Set url array
-	visited_urls := []string{startURL}
+	visitedUrls := []string{startURL}
 
 	// Get the URLS from links at top
 	s.col.OnHTML(".resultsarchive-filter-item-link", func(e *colly.HTMLElement) {
@@ -19,9 +18,12 @@ func (s *service) CollectURLs(startURL string) {
 		url := e.Attr("href")
 
 		// Check if URL is new
-		if !slices.Contains(visited_urls, url) {
-			e.Request.Visit(s.baseURL + url)
-			visited_urls = append(visited_urls, url)
+		if !slices.Contains(visitedUrls, url) {
+			err := e.Request.Visit(s.baseURL + url)
+			if err != nil {
+				fmt.Println("URL failed to visit ", s.baseURL, url)
+			}
+			visitedUrls = append(visitedUrls, url)
 		}
 
 	})
@@ -33,9 +35,12 @@ func (s *service) CollectURLs(startURL string) {
 		url := e.Attr("href")
 
 		// Check if URL is new
-		if !slices.Contains(visited_urls, url) {
-			e.Request.Visit(s.baseURL + url)
-			visited_urls = append(visited_urls, url)
+		if !slices.Contains(visitedUrls, url) {
+			err := e.Request.Visit(s.baseURL + url)
+			if err != nil {
+				fmt.Println("URL failed to visit ", s.baseURL, url)
+			}
+			visitedUrls = append(visitedUrls, url)
 		}
 
 	})
@@ -50,6 +55,9 @@ func (s *service) CollectURLs(startURL string) {
 	})
 
 	// Visit first URL
-	s.col.Visit(s.baseURL + startURL)
+	err := s.col.Visit(s.baseURL + startURL)
+	if err != nil {
+		fmt.Println("URL failed to visit ", s.baseURL, startURL)
+	}
 
 }
