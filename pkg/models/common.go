@@ -16,6 +16,9 @@ type F1Services interface {
 	RaceResultService
 	RacesService
 	StartingGridService
+	SprintGridService
+	SprintShootoutService
+	SprintResultService
 }
 
 // Driver : model for driver for the whole season

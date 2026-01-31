@@ -25,6 +25,9 @@ type Storage struct {
 	raceResults                *mongo.Collection
 	race                       *mongo.Collection
 	startingGrid               *mongo.Collection
+	sprintGrid                 *mongo.Collection
+	sprintShootout             *mongo.Collection
+	sprintResults              *mongo.Collection
 }
 
 // Order : MongoDB order
@@ -73,6 +76,9 @@ func NewStorage(db *mongo.Database) *Storage {
 		raceResults:                db.Collection("race_results"),
 		race:                       db.Collection("race"),
 		startingGrid:               db.Collection("starting_grid"),
+		sprintGrid:                 db.Collection("sprint_grid"),
+		sprintShootout:             db.Collection("sprint_shootout"),
+		sprintResults:              db.Collection("sprint_results"),
 	}
 
 	return &s
