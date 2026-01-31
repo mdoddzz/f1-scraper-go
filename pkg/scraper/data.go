@@ -275,9 +275,78 @@ func (s *Service) HandleData() {
 
 		case "sprint-grid.html":
 
+		// Get race ID from URL
+		raceId, err := s.getRaceId(path)
+		if err != nil {
+			fmt.Println("Unable to get raceID")
+			break
+		}
+
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			tableData := models.SprintGrid{
+				RaceId:   raceId,
+				Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+				Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+				Driver:   handleF1Driver(el, "td:nth-child(4)"),
+				Car:      el.ChildText("td:nth-child(5)"),
+				Time:     *handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+			}
+			err := s.f1Service.AddSprintGrid(tableData)
+			if err != nil {
+				fmt.Println("Unable to save sprint grid")
+			}
+		})
+
 		case "sprint-shootout.html":
 
+		// Get race ID from URL
+		raceId, err := s.getRaceId(path)
+		if err != nil {
+			fmt.Println("Unable to get raceID")
+			break
+		}
+
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			tableData := models.SprintShootout{
+				RaceId:   raceId,
+				Position: handleF1Int(el.ChildText("td:nth-child(2)")),
+				Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+				Driver:   handleF1Driver(el, "td:nth-child(4)"),
+				Car:      el.ChildText("td:nth-child(5)"),
+				Time:     handleF1Time(el.ChildText("td:nth-child(6)"), "time"),
+				Laps:     handleF1Int(el.ChildText("td:nth-child(7)")),
+			}
+			err := s.f1Service.AddSprintShootout(tableData)
+			if err != nil {
+				fmt.Println("Unable to save sprint shootout")
+			}
+		})
+
 		case "sprint-results.html":
+
+		// Get race ID from URL
+		raceId, err := s.getRaceId(path)
+		if err != nil {
+			fmt.Println("Unable to get raceID")
+			break
+		}
+
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			tableData := models.SprintResult{
+				RaceId:   raceId,
+				Position: handleF1IntOrString(el.ChildText("td:nth-child(2)")),
+				Number:   handleF1Int(el.ChildText("td:nth-child(3)")),
+				Driver:   handleF1Driver(el, "td:nth-child(4)"),
+				Car:      el.ChildText("td:nth-child(5)"),
+				Laps:     handleF1Int(el.ChildText("td:nth-child(6)")),
+				Time:     el.ChildText("td:nth-child(7)"),
+				Points:   handleF1Float(el.ChildText("td:nth-child(8)")),
+			}
+			err := s.f1Service.AddSprintResult(tableData)
+			if err != nil {
+				fmt.Println("Unable to save sprint result")
+			}
+		})
 
 		case "practice-0.html", "practice-1.html", "practice-2.html", "practice-3.html", "practice-4.html":
 
